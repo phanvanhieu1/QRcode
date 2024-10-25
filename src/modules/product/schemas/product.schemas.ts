@@ -1,5 +1,4 @@
 import { category } from "@/modules/category/schemas/category.schemas";
-import { employee } from "@/modules/employee/schemas/employee.schemas";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from "mongoose";
 
@@ -27,7 +26,7 @@ export class product {
   @Prop()
   price  : string;
 
-  @Prop()
+  @Prop({default : 1})
   status  : number;
 
   @Prop()

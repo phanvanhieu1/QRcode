@@ -1,17 +1,25 @@
 import { category } from "@/modules/category/schemas/category.schemas";
-import { employee } from "@/modules/employee/schemas/employee.schemas";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose from "mongoose";
 
 @Schema({timestamps: true})
 export class qrCode {
-  @Prop({require:  true})
-  id: string;
+  @Prop()
+  userName: string;
 
   @Prop()
-  tableNumber: number;
+  password: string;
 
   @Prop()
+  tableNumber: string;
+
+  @Prop({default: "GUESS"})
+  role: string;
+
+  @Prop({ type: String, enum: ['NOT_USED', 'USED'], default: 'USED' })
+  status: string;
+
+  @Prop({default: ""})
   code  : string;
 
 }

@@ -6,27 +6,37 @@ import { MongooseModule } from '@nestjs/mongoose';
 import mongoose, { connection } from 'mongoose';
 import { CategoryModule } from './modules/category/category.module';
 import { ComboModule } from './modules/combo/combo.module';
-import { EmployeeModule } from './modules/employee/employee.module';
 import { OrderModule } from './modules/order/order.module';
 import { ProductModule } from './modules/product/product.module';
 import { QrCodeModule } from './modules/qr-code/qr-code.module';
+import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/passport/jwt-auth.guard';
 
 @Module({
   imports: [
     CategoryModule,
     ComboModule,
-    EmployeeModule,
     OrderModule,
     ProductModule ,
     QrCodeModule,
+    UserModule,
     ConfigModule.forRoot({
       envFilePath:'.env',
       isGlobal:true,  
     }),
-    MongooseModule.forRoot(process.env.DB_URL)
+    MongooseModule.forRoot(process.env.DB_URL),
+    AuthModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 
 

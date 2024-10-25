@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -75,15 +75,24 @@ export class ProductService {
     return {rs, totalPages}; 
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(_id: string) {
+    return await this.productModel.findById({_id})
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(updateProductDto: UpdateProductDto) {
+    const rs = await this.productModel.updateOne(
+      {_id: updateProductDto},
+      {
+        ...updateProductDto
+      })
+      return "update thanh cong"
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(_id: string) {
+    if(mongoose.isValidObjectId(_id)) {
+      return await this.productModel.deleteOne({_id})
+    } else {
+      throw new BadRequestException("id không đúng định dạng")
+    }
   }
 }

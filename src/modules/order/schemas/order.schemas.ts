@@ -1,12 +1,9 @@
-import { employee } from "@/modules/employee/schemas/employee.schemas";
 import { product } from "@/modules/product/schemas/product.schemas";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 @Schema({timestamps: true})
 export class order {
-  @Prop({require:  true})
-  id: string;
 
   @Prop()
   tableNumber: number;
@@ -17,18 +14,21 @@ export class order {
   @Prop()
   userName  : string;
 
-  @Prop()
+  @Prop({default: 0})
   discount  : number;
 
-  @Prop()
-  paymenMethod  : [1,2,3];
+  @Prop({ type: String, enum: ["TM", "CK"]})
+  paymenMethod: string;
 
-  @Prop({ref:product.name})
-  item  : [
-    quantiti: number,
-    amount: number,
-    product: product
-  ];
+  @Prop({
+    type: [{
+      quantiti: { type: Number, required: true },
+      amount: { type: Number, required: true },
+      product: { type: Types.ObjectId, ref: 'Product', required: true },
+    }],
+    default: [],
+  })
+  item: [];
 
   @Prop()
   status  : number;
@@ -39,7 +39,7 @@ export class order {
   @Prop()
   excessiveAmount  : string;
 
-  @Prop({ref: employee.name})
+  @Prop()
   userReceive  : string;
 
 
