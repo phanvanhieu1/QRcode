@@ -2,9 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } f
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Public } from '@/decorator/customize';
 import { RoleGuard } from '@/auth/authorization/auth.guard';
 import { Roles } from '@/auth/authorization/roles.decorator';
+import { Public } from '@/decorator/customize';
 
 @Controller('product')
 export class ProductController {
