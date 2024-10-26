@@ -3,8 +3,9 @@ import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { RoleGuard } from '@/auth/authorization/auth.guard';
-import { Roles } from '@/auth/authorization/roles.decorator';
 import { Public } from '@/decorator/customize';
+import { Roles } from '@/auth/authorization/roles.decorator';
+
 
 @Controller('product')
 export class ProductController {
