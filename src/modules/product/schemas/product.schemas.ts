@@ -32,7 +32,7 @@ export class product {
   @Prop()
   image  : string;
 
-  @Prop({ref: category.name})
+  @Prop()
   category  : string;
 }
 
