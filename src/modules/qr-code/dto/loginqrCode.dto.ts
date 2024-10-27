@@ -2,8 +2,8 @@ import { IsNotEmpty, IsString } from "class-validator";
 
 export class loginQrCodeDto {
 
-  @IsNotEmpty()
-  tableNumber: string;
+  @IsNotEmpty({message: "asdas"})
+  table: string;
 
 
 }

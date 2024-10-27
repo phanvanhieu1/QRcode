@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateQrCodeDto } from './dto/create-qr-code.dto';
 import { UpdateQrCodeDto } from './dto/update-qr-code.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -22,13 +22,12 @@ export class QrCodeService {
     return !!table;
   }
 
-  async generateQrCode(url: string): Promise<string> {
-    try {
-      return await QRCode.toDataURL(url); // Tạo mã QR và trả về dưới dạng Base64
-    } catch (err) {
-      throw new Error('Không thể tạo mã QR');
-    }
-  }
+  
+
+  async generateQrCode(tableId: string): Promise<string> {
+    const url = `https://qrcode-awav.onrender.com/api/v1/qr-code/login?table=${tableId}`;
+    return await QRCode.toDataURL(url); // Trả về QR dưới dạng Data URL (base64 image)
+}
 
   // async generateQRCode(url: string): Promise<string> {
   //   try {
@@ -55,12 +54,12 @@ export class QrCodeService {
     }
   }
 
-  async findByNumberTable (numTable: string) {
-    return await this.qrCodeModel.findOne ({numTable})
-  }
+  // async findByNumberTable (numTable: string) {
+  //   return await this.qrCodeModel.findOne ({numTable})
+  // }
  
-  findAll() {
-    return `This action returns all qrCode`;
+  findAllTable(query: string, current: number, pageSize: number) {
+    return this.userService.findAllTable(query, current, pageSize)
   }
 
   findOne(id: number) {
@@ -71,11 +70,70 @@ export class QrCodeService {
     return `This action updates a #${id} qrCode`;
   }
 
-  async remove(_id: string) {
+  isqrCodeExist2 = async (_id: string) => {
+    const table = await this.userService.checkUser(
+      _id
+    );
+    return table;
+  }
+
+  async removeTable(_id: string) {
     if(mongoose.isValidObjectId(_id)) {
-      return await this.qrCodeModel.deleteOne({_id})
+      const rs = await this.isqrCodeExist2(_id)
+      if(!rs) {
+        throw new BadRequestException(`bàn này không tồn tại`)
+      }
+      await this.userService.deleteTable(_id)
+        return {
+          statusCode: HttpStatus.OK, // Có thể chỉ định mã trạng thái
+          message: `đã xoá qr bàn số ${rs.username}`,
+      }
     } else {
       throw new BadRequestException("id không đúng định dạng")
     }
+  }
+
+  checkQr1 = async (_id: string) => {
+    const table =await this.qrCodeModel.findOne({_id: _id})
+    return table
+  }
+
+  async removeqr(_id: string) {
+    if(mongoose.isValidObjectId(_id)) {
+      const rs = await this.checkQr1(_id)
+      if(!rs) {
+        throw new BadRequestException("không tồn tại qr này")
+      }
+      await this.qrCodeModel.deleteOne({_id})
+      return {
+        statusCode: HttpStatus.OK, // Có thể chỉ định mã trạng thái
+        message: `đã xoá qr bàn số ${rs.tableNumber}`,
+        data: {rs}
+    }
+    } else {
+      throw new BadRequestException("id không đúng định dạng")
+    }
+  }
+
+  checkQr = async (num: string) => {
+    const table =await this.qrCodeModel.findOne({tableNumber: num})
+    return table
+  }
+
+
+  async saveQr(tableNumber: string, code: string) {
+    const checkTable = await this.isqrCodeExist(tableNumber)
+    const rs = await this.checkQr(tableNumber)
+    if(!checkTable) {
+      throw new BadRequestException(`không tìm thấy bàn số ${tableNumber}, vui lòng tạo bàn số ${tableNumber} trước`)
+    }
+    else if(rs) {
+      throw new BadRequestException(`bàn số ${tableNumber} đã có mã qr, vui lòng thử lại`)
+    }
+    const qr = await this.qrCodeModel.create({
+      tableNumber: tableNumber,
+      code: code
+    })
+    return qr
   }
 }

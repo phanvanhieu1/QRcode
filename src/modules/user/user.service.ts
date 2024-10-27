@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { user } from './schemas/user.schemas';
 import { Model } from 'mongoose';
 import { hashPasswordHelper } from '@/helper/util';
+import aqp from 'api-query-params';
 
 @Injectable()
 export class UserService {
@@ -30,6 +31,16 @@ export class UserService {
     return rs
   }
 
+  async checkUser(_id: string) {
+    const rs = await this.userModel.findOne({_id: _id})
+    return rs
+  }
+
+  async deleteTable(_id: string) {
+    const rs = await this.userModel.deleteOne({_id: _id})
+    return rs
+  }
+
   async createTable(data: any) {
     return await this.userModel.create({
       username: data.tableNumber,
@@ -37,8 +48,33 @@ export class UserService {
     })
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findAllTable(query: string, current: number, pageSize: number) {
+    const {filter, sort} =  aqp(query);
+    filter.role = 'GUESS';
+    if(filter.current) delete filter.current;
+    if(filter.pageSize) delete filter.pageSize;
+
+    if(!current) current = 1;
+    if(!pageSize) pageSize = 10;
+
+    const totalItems = (await this.userModel.find(filter)).length;
+    const totalPages = Math.ceil(totalItems / pageSize);
+    const skip = (current - 1) * (pageSize);
+    const rs = await this.userModel
+    .find(filter)
+    .limit(pageSize)
+    .skip(skip)
+    .sort(sort as any)
+    .select("-_id")
+    .select("-role")
+    .select("-password")
+
+    const result = rs.map(item => {
+      const { username, ...rest } = item.toObject();
+      return { bàn: username, ...rest };
+  });
+    
+  return { result, totalPages };
   }
 
   async findByUsername(username: string) {
