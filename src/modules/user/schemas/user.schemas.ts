@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 @Schema({timestamps: true})
 export class user {
-  @Prop({ type: String, enum: ['ADMIN', 'EMPLOYEE', 'GUESS'], default: 'GUESS' })
+  @Prop({ type: String, enum: ['ADMIN', 'EMPLOYEE', 'GUEST'], default: 'GUEST' })
   role: string;
 
   @Prop()

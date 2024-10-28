@@ -106,7 +106,7 @@ export class QrCodeService {
       }
       await this.qrCodeModel.deleteOne({_id})
       return {
-        statusCode: HttpStatus.OK, // Có thể chỉ định mã trạng thái
+        statusCode: HttpStatus.OK, 
         message: `đã xoá qr bàn số ${rs.tableNumber}`,
         data: {rs}
     }

@@ -18,6 +18,7 @@ export class UserService {
     const {username, password} = createUser
     const hashpassword = await hashPasswordHelper(createUser.password)
     const user = await this.userModel.create({
+      role: "EMPLOYEE",
       username,  
       password: hashpassword
     })
@@ -50,7 +51,7 @@ export class UserService {
 
   async findAllTable(query: string, current: number, pageSize: number) {
     const {filter, sort} =  aqp(query);
-    filter.role = 'GUESS';
+    filter.role = 'GUEST';
     if(filter.current) delete filter.current;
     if(filter.pageSize) delete filter.pageSize;
 

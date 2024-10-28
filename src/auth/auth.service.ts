@@ -46,13 +46,13 @@ export class AuthService {
   return comparePasswordHelper(pass1, pass2)
  }
 
-  async loginGuess(table: any, body: any) {
+  async loginGUEST(table: any, body: any) {
     const rs = await this.checkTable(table)
     if(body.password !== rs.password) {
       throw new UnauthorizedException("sai tk mk");
     }
     const payload = { 
-      table: rs.username, 
+      username: rs.username, 
       sub: rs._id, 
       role: rs.role 
     };  

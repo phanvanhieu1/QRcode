@@ -43,14 +43,14 @@ export class QrCodeController {
   @Post('login')
   @Public()
   // @UseGuards(LocalAuthGuard)
-  async loginGuess(
+  async loginGUEST(
     @Query('table') table: string,
     @Body() body:bodyQrCodeDto 
   ) {
     if (!table) {
       throw new BadRequestException("Table parameter is required")
     }
-    return await this.authService.loginGuess(table,body);
+    return await this.authService.loginGUEST(table,body);
   }
 
   @Get()
