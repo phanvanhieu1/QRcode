@@ -11,5 +11,11 @@ export enum OrderStatus {
     CASH = 'Tiền mặt',
     CARD = 'Thẻ',  
   }
+
+  export enum ProductStatus {
+    IN_STOCK = 'Còn món',
+    OUT_OF_STOCK = 'Hết món',
+}
+
   
   

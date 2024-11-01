@@ -26,7 +26,7 @@ export class QrCodeService {
 
   async generateQrCode(tableId: string): Promise<string> {
     const url = `https://qrcode-awav.onrender.com/api/v1/qr-code/login?table=${tableId}`;
-    return await QRCode.toDataURL(url); // Trả về QR dưới dạng Data URL (base64 image)
+    return await QRCode.toDataURL(url);
 }
 
   // async generateQRCode(url: string): Promise<string> {

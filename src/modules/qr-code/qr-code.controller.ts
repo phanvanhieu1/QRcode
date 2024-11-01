@@ -53,7 +53,15 @@ export class QrCodeController {
     return await this.authService.loginGUEST(table,body);
   }
 
+  @Get('login')
+  @Public()
+  async login(@Query('table') tableId: string) {
+    return { message: `Đăng nhập thành công cho bàn ${tableId}` };
+  }
+
   @Get()
+  @Roles('EMPLOYEE')
+  @UseGuards(RoleGuard)
   findAllTable(
     @Query() query: string,
     @Query("current") current: string,
