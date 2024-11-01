@@ -56,3 +56,6 @@ pids
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 .vercel
+
+/src/config/tonal-premise-440411-m7-7f7f98ae9b6b.json
+

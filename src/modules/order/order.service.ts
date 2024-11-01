@@ -16,13 +16,25 @@ export class OrderService {
     private orderModel: Model<order>,
   ) {
 
-    this.sheets = google.sheets({
-      version: 'v4',
-      auth: new google.auth.GoogleAuth({
-        keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
-        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-      }),
-    });
+    let auth;
+if (process.env.NODE_ENV === 'production') {
+  // Khi chạy trên Render, sử dụng biến môi trường
+  auth = new google.auth.GoogleAuth({
+    credentials: JSON.parse(process.env.GOOGLE_CREDENTIALS || '{}'),
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+  });
+} else {
+  // Khi chạy trên local, sử dụng file JSON
+  auth = new google.auth.GoogleAuth({
+    keyFile: process.env.GOOGLE_CREDENTIALS,
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+  });
+}
+
+this.sheets = google.sheets({
+  version: 'v4',
+  auth: auth,
+});
   }
 
   async create(cartDto: CartDto, tableNum: number) {
