@@ -31,13 +31,10 @@ export class order {
   discount  : number;
 
   @Prop({ type: String, enum: Object.values(PaymentMethod), default: PaymentMethod.CASH }) 
-  paymentMethod: PaymentMethod;
+  paymenMethod: PaymentMethod;
 
   @Prop({ type: [OrderItem], default: [] })
   items: OrderItem[];
-
-  @Prop({ default: 0 })
-  totalBill: number;
 
   @Prop({ type: String, enum: Object.values(OrderStatus), default: OrderStatus.PLACED })
   status: OrderStatus;
@@ -54,18 +51,7 @@ export class order {
   @Prop({default: ""})
   note: string
 
-  @Prop({ type: Date }) 
-  createdAt: Date;
-
-  @Prop({ type: Date }) 
-  updatedAt: Date;
-
 
 }
 
-
 export const orderSchema = SchemaFactory.createForClass(order);
-orderSchema.pre<order>('save', function (next) {
-  this.totalBill = this.items.reduce((sum, item) => sum + (item.amount * item.quantity), 0);
-  next(); 
-});

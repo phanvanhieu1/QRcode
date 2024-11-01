@@ -4,8 +4,6 @@ import { comparePasswordHelper } from '@/helper/util';
 import { JwtService } from '@nestjs/jwt';
 import { QrCodeService } from '@/modules/qr-code/qr-code.service';
 import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
-import { google } from 'googleapis';    
-
 
 @Injectable()
 export class AuthService {

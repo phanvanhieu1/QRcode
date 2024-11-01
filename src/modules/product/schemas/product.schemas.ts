@@ -1,4 +1,3 @@
-import { ProductStatus } from "@/decorator/enum";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from "mongoose";
 
@@ -26,8 +25,9 @@ export class product {
   @Prop()
   price  : string;
 
-  @Prop({ enum: Object.values(ProductStatus), default: ProductStatus.IN_STOCK }) 
-  status: ProductStatus; 
+  @Prop({default : 1})
+  status  : number;
+
   @Prop()
   image  : string;
 
