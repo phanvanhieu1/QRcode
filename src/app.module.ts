@@ -27,7 +27,7 @@ import { JwtAuthGuard } from './auth/passport/jwt-auth.guard';
       isGlobal:true,  
     }),
     MongooseModule.forRoot(process.env.DB_URL),
-    AuthModule
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
