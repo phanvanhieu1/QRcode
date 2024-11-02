@@ -7,20 +7,19 @@ import { Model } from 'mongoose';
 import { OrderStatus } from '@/decorator/enum';
 import { RemoveItemsDto } from './dto/remove-item.dto';
 import { google } from 'googleapis';
-
 @Injectable()
 export class OrderService {
   private sheets;
   constructor(
     @InjectModel(order.name) 
-    private orderModel: Model<order>,
+    private orderModel: Model<order>, 
   ) {
-
+ 
     this.sheets = google.sheets({
-      version: 'v4',
+      version: 'v4', 
       auth: new google.auth.GoogleAuth({
         keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
-        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+        scopes: ['https://www.googleapis.com/auth/spreadsheets'], 
       }),
     });
   }
@@ -29,7 +28,7 @@ export class OrderService {
     const items = cartDto.items.map(item => ({
       quantity: item.quantity,
       amount: item.amount,
-      product: item.productId,
+      product: item.productId, 
     }));
 
     return await this.orderModel.create({
@@ -53,7 +52,7 @@ export class OrderService {
     }).populate({
       path: 'items.product',
       model: 'product',
-    })
+    }) 
     .exec();
   }
 
