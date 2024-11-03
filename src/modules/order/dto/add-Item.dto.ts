@@ -3,18 +3,16 @@ import { IsArray, IsNotEmpty, IsPositive, ValidateNested } from 'class-validator
 
 export class ItemDto {
     @IsNotEmpty()
-    itemId: string;  // ID của sản phẩm
-
+    itemId: string; 
     @IsPositive()
-    quantity: number;  // Số lượng món cần thêm
-
+    quantity: number; 
     @IsPositive()
-    amount: number; // Tổng giá trị của món cần thêm
+    amount: number; 
 }
 
 export class AddItemsDto {
     @IsArray()
     @ValidateNested({ each: true })
     @Type(() => ItemDto)
-    items: ItemDto[]; // Mảng các món ăn
+    items: ItemDto[];
 }
