@@ -10,11 +10,6 @@ async function bootstrap() {
     forbidNonWhitelisted: true,
   }));
   app.setGlobalPrefix('api/v1', {exclude:['']});
-  // app.use(cors({
-  //   origin: ['http://localhost:3000'],
-  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-  //   credentials: true,
-  // }));
   await app.listen(3000);
 }
 bootstrap();
