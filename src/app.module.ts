@@ -44,6 +44,7 @@ export class AppModule implements OnModuleInit {
   onModuleInit() {
     mongoose.connect(process.env.DB_URL).then(() => {
       console.log("connect ok");
+      console.log(process.env.GOOGLE_APPLICATION_CREDENTIALS)
     })
     .catch(()=>{
       console.log("error")
