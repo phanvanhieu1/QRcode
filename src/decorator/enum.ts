@@ -2,7 +2,8 @@ export enum OrderStatus {
     PLACED = 'Đã đặt hàng',
     CONFIRMED = 'Đã xác nhận',
     COOKING = 'Đang nấu',
-    COMPLETED = 'Hoàn thành đơn',
+    COMPLETED = 'Hoàn thành',
+    PAID = "Đã thanh toán",
     CANCELLED = 'Hủy đơn hàng',
   }
 

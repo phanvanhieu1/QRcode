@@ -54,6 +54,9 @@ export class order {
   @Prop({default: ""})
   note: string
 
+  @Prop({ type: [OrderItem], default: [] })
+  returnedItems: OrderItem[];
+
   @Prop({ type: Date }) 
   createdAt: Date;
 

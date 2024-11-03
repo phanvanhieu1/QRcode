@@ -90,10 +90,11 @@ export class OrderController {
   }, {});
   const values = Object.keys(groupedData).map(date => {
     const { totalOrders, cancelledOrders, completedOrders, revenue } = groupedData[date];
-    return [date, totalOrders, cancelledOrders, completedOrders, revenue];
+    return { date, totalOrders, cancelledOrders, completedOrders, revenue}  ;
   });
-  this.orderService.updateSheet(values)
-  return { message: 'Tất cả hóa đơn đã được đồng bộ vào Google Sheets' };
+  return values
+  // this.orderService.updateSheet(values)
+  // return { message: 'Tất cả hóa đơn đã được đồng bộ vào Google Sheets' };
 }
 
 @Delete(':id/cancel')
@@ -107,6 +108,14 @@ async cancelOrder(@Param('id') orderId: string) {
         return { message: error.message };
     }
 }
+
+// @Post(':id/return')
+//   async returnItems(
+//     @Param('id') id: string,
+//     @Body() returnData: AddItemsDto
+//   ): Promise<Order> {
+//     return this.orderService.processReturn(id, returnData);
+//   }
 
 
   @Patch(':id')
