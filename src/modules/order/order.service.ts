@@ -113,6 +113,7 @@ export class OrderService {
       default:
           throw new BadRequestException('Trạng thái đơn hàng không hợp lệ.');
   }
+  ///aaa
 
   for (const item of addItemsDto.items) {
     const existingItem = order.items.find(existing => existing.product.toString() === item.itemId);
