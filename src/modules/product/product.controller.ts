@@ -1,20 +1,34 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, UseInterceptors, UploadedFile, Req, UploadedFiles } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { RoleGuard } from '@/auth/authorization/auth.guard';
 import { Public } from '@/decorator/customize';
 import { Roles } from '@/auth/authorization/roles.decorator';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { multerS3Config } from '@/config/multer.config';
+
+
+
 
 
 @Controller('product')
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly productService: ProductService,
+    
+  ) {
 
-  @Post()
+  }
+
+  @Post('create')
   @Roles('ADMIN')
   @UseGuards(RoleGuard)
-  create(@Body() createProductDto: CreateProductDto) {
+  @UseInterceptors(FilesInterceptor('images', 10, multerS3Config))
+  async create(@Body() createProductDto: CreateProductDto, @UploadedFiles() files: Express.MulterS3.File[]) {
+    createProductDto.images = files.map(file => file.location);
     return this.productService.create(createProductDto);
   }
 
@@ -38,7 +52,14 @@ export class ProductController {
   @Patch()
   @Roles('ADMIN')
   @UseGuards(RoleGuard)
-  update(@Body() updateProductDto: UpdateProductDto) {
+  @UseInterceptors(FilesInterceptor('images', 10, multerS3Config)) 
+  async update(
+    @Body() updateProductDto: UpdateProductDto,  
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
+    if (files && files.length > 0) {
+      updateProductDto.images = files.map(file => (file as any).location);
+    }
     return this.productService.update(updateProductDto);
   }
 
@@ -47,5 +68,14 @@ export class ProductController {
   @UseGuards(RoleGuard)
   remove(@Param('id') _id: string) {
     return this.productService.remove(_id);
+  }
+
+  @Post('upload')
+  @Public()
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(@UploadedFile() file: Express.Multer.File) {
+    // Xử lý upload ảnh
+    const fileUrl = await this.productService.uploadToS3(file); // Hành động upload đến S3
+    return { url: fileUrl }; // Trả về URL ảnh đã upload
   }
 }
