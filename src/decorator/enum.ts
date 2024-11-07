@@ -18,5 +18,17 @@ export enum OrderStatus {
     OUT_OF_STOCK = 'Hết món',
 }
 
+export enum ProductCategory {
+  APPETIZER = 'Món khai vị',
+  MAIN_COURSE = 'Món chính',
+  DESSERT = 'Món tráng miệng',
+  BEVERAGE = 'Đồ uống',
+  SIDE_DISH = 'Món phụ',
+  SALAD = 'Salad',
+  SOUP = 'Súp',
+  SNACK = 'Ăn vặt',
+  BOTTLED_DRINKS = 'Đồ uống đóng chai',
+}
+
   
   

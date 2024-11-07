@@ -1,4 +1,5 @@
-import { IsEmpty, IsInt, IsNotEmpty, IsNumber, IsNumberString, IsOptional, isString, IsString } from "class-validator";
+import { ProductCategory } from "@/decorator/enum";
+import { IsArray, IsEmpty, IsEnum, IsInt, IsNotEmpty, IsNumber, IsNumberString, IsOptional, isString, IsString } from "class-validator";
 
 export class CreateProductDto {
 
@@ -29,11 +30,14 @@ export class CreateProductDto {
   @IsString()
   price  : string;
 
-  @IsInt()
-  @IsOptional()
-  status  : number;
+  @IsEnum(ProductCategory)
+  @IsNotEmpty()
+  category  : ProductCategory;
 
-  @IsString()
   @IsOptional()
-  image  : string;
+  canBeReturned: boolean;
+
+  @IsArray()
+  @IsOptional()
+  images: string[];
 }

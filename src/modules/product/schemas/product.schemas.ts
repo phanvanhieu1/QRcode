@@ -1,4 +1,4 @@
-import { ProductStatus } from "@/decorator/enum";
+import { ProductCategory, ProductStatus } from "@/decorator/enum";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from "mongoose";
 import slugify from 'slugify';
@@ -33,11 +33,14 @@ export class product {
   @Prop()
   image  : string;
 
-  @Prop()
-  category  : string;
+  @Prop({ enum: Object.values(ProductCategory) })
+  category  : ProductCategory;
 
   @Prop({ default: false })
   canBeReturned: boolean;
+
+  @Prop([String]) // Chuyển thành mảng các URL
+  images: string[];
 }
 
 

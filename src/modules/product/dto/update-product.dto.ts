@@ -1,4 +1,5 @@
-import { IsEmpty, IsInt, IsMongoId, IsNotEmpty, IsNumber, IsNumberString, IsOptional, isString, IsString } from "class-validator";
+import { ProductCategory, ProductStatus } from "@/decorator/enum";
+import { IsArray, IsBoolean, IsEmpty, IsEnum, IsInt, IsMongoId, IsNotEmpty, IsNumber, IsNumberString, IsOptional, isString, IsString } from "class-validator";
 
 export class UpdateProductDto {
 
@@ -7,29 +8,46 @@ export class UpdateProductDto {
   _id: string;
 
   @IsOptional()
-  name: string;
+  @IsString()
+  name?: string;
 
   @IsOptional()
-  nameEng  : string;
+  @IsString()
+  nameEng?: string;
 
   @IsOptional()
-  nameSlug  : string;
+  @IsString()
+  nameSlug?: string;
 
   @IsOptional()
-  nameSearch  : string;
+  @IsString()
+  nameSearch?: string;
 
   @IsOptional()
-  nameSearchEng : string;
+  @IsString()
+  nameSearchEng?: string;
 
   @IsOptional()
-  description  : string;
+  @IsString()
+  description?: string;
 
   @IsOptional()
-  price  : string;
+  @IsString()
+  price?: string;
 
   @IsOptional()
-  status  : number;
+  @IsEnum(ProductStatus)
+  status?: ProductStatus;
 
   @IsOptional()
-  image  : string;
+  @IsEnum(ProductCategory)
+  category?: ProductCategory;
+
+  @IsOptional()
+  @IsBoolean()
+  canBeReturned?: boolean;
+
+  @IsArray()
+  @IsOptional()
+  images?: string[];
 }

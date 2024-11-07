@@ -1,7 +1,7 @@
 import { Module, OnModuleInit } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import mongoose, { connection } from 'mongoose';
 import { CategoryModule } from './modules/category/category.module';
@@ -13,20 +13,24 @@ import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/passport/jwt-auth.guard';
+import { MulterModule } from '@nestjs/platform-express';
+import { S3Client } from '@aws-sdk/client-s3';
+import 'dotenv/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath:'.env',
+      isGlobal:true,  
+    }),
+    
+    MongooseModule.forRoot(process.env.DB_URL),
     CategoryModule,
     ComboModule,
     OrderModule,
     ProductModule ,
     QrCodeModule,
     UserModule,
-    ConfigModule.forRoot({
-      envFilePath:'.env',
-      isGlobal:true,  
-    }),
-    MongooseModule.forRoot(process.env.DB_URL),
     AuthModule,
   ],
   controllers: [AppController],
