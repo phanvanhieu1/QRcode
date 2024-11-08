@@ -25,18 +25,10 @@ export class QrCodeService {
   
 
   async generateQrCode(tableId: string): Promise<string> {
-    const url = `https://qrcode-awav.onrender.com/api/v1/qr-code/login?table=${tableId}`;
+    const url = `${process.env.HOSTNAME}/api/v1/qr-code/login?table=${tableId}`;
     return await QRCode.toDataURL(url);
 }
 
-  // async generateQRCode(url: string): Promise<string> {
-  //   try {
-  //     const qrCodeDataUrl = await QRCode.toDataURL(url);
-  //     return qrCodeDataUrl; // Trả về URL của mã QR
-  //   } catch (error) { 
-  //     throw new Error('Failed to generate QR Code');
-  //   }
-  // }
 
   async create(data: CreateQrCodeDto) {
     const {tableNumber} = data

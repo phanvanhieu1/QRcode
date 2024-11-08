@@ -10,9 +10,6 @@ import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { multerS3Config } from '@/config/multer.config';
 
 
-
-
-
 @Controller('product')
 export class ProductController {
   constructor(
