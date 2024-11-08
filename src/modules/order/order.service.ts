@@ -6,7 +6,6 @@ import { order } from './schemas/order.schemas';
 import { Model } from 'mongoose';
 import { OrderStatus } from '@/decorator/enum';
 import { RemoveItemsDto } from './dto/remove-item.dto';
-import { google } from 'googleapis';
 @Injectable()
 export class OrderService {
   private sheets;
@@ -14,14 +13,6 @@ export class OrderService {
     @InjectModel(order.name) 
     private orderModel: Model<order>, 
   ) {
- 
-    // this.sheets = google.sheets({
-    //   version: 'v4', 
-    //   auth: new google.auth.GoogleAuth({
-    //     keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
-    //     scopes: ['https://www.googleapis.com/auth/spreadsheets'], 
-    //   }),
-    // });
   }
 
   async create(cartDto: CartDto, tableNum: number) {
@@ -171,21 +162,6 @@ export class OrderService {
     return await this.orderModel.find()
   }
 
-  // async  updateSheet(values: any) {
-  // const spreadsheetId = process.env.GOOGLE_SHEET_ID;
-  // const range = `Trang tính1!A2:E`;
-  // const resource = { values };
-  // await this.sheets.spreadsheets.values.clear({
-  //   spreadsheetId,
-  //   range,
-  // });
-  // await this.sheets.spreadsheets.values.update({
-  //   spreadsheetId,
-  //   range,
-  //   valueInputOption: 'RAW',
-  //   resource,
-  // });
-  // }
 
   async cancelOrder(orderId: string): Promise<order> {
     const order = await this.orderModel.findById(orderId);
@@ -208,48 +184,6 @@ export class OrderService {
     order.status = OrderStatus.CANCELLED;
     return await order.save();
 }
-
-// async processReturn(id: string, returnData: any): Promise<order> {
-//   const order = await this.orderModel.findById(id);
-//   if (!order) {
-//     throw new Error('Order not found');
-//   }
-
-//   let totalRefund = 0;
-
-//   for (const item of returnData.items) {
-//     const orderItem = order.items.find(i => i.product === item.product);
-//     if (orderItem) {
-//       // Kiểm tra số lượng trả lại có hợp lệ không
-//       if (item.quantity > orderItem.quantity - orderItem.returned) {
-//         throw new Error('Cannot return more than ordered');
-//       }
-
-//       // Lấy thông tin sản phẩm
-//       const productDetails = await this.productModel.findById(item.productId);
-//       if (!productDetails) {
-//         throw new Error('Product not found');
-//       }
-
-//       // Kiểm tra sản phẩm có thể trả lại không
-//       if (!productDetails.canBeReturned) {
-//         throw new Error(`Product ${productDetails.name} cannot be returned`);
-//       }
-
-//       // Cập nhật số lượng trả lại
-//       orderItem.returned += item.quantity;
-
-//       // Giả sử giá mỗi sản phẩm là 10, bạn có thể thay đổi logic này để lấy giá thực tế từ DB
-//       totalRefund += 10 * item.quantity; // Tính tiền hoàn lại
-//     }
-//   }
-
-//   // Cập nhật tổng tiền hóa đơn
-//   order.totalAmount -= totalRefund;
-//   await order.save();
-
-//   return order; // Trả về đơn hàng đã cập nhật
-// }
 
 
   update(id: number, updateOrderDto: UpdateOrderDto) {

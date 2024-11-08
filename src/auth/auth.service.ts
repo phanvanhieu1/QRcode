@@ -3,15 +3,12 @@ import { UserService } from '@/modules/user/user.service';
 import { comparePasswordHelper } from '@/helper/util';
 import { JwtService } from '@nestjs/jwt';
 import { QrCodeService } from '@/modules/qr-code/qr-code.service';
-import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
-import { google } from 'googleapis';    
 
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UserService, 
-    private qrCodeService: QrCodeService, 
     private jwtService: JwtService
   ) {}
 
@@ -22,12 +19,6 @@ export class AuthService {
     return user;
   }
 
-  // async validateTable(table: string, pass: string):Promise<any> {
-  //   const user = await this.qrCodeService.findByNumberTable(table);  
-  //   const isValidPassword = await comparePasswordHelper(pass, user.password)
-  //   if(!user || !isValidPassword) return null
-  //   return user;
-  // }
 
   async login(user: any) {
     const payload = { 
@@ -64,17 +55,5 @@ export class AuthService {
       }),
     };
   }
-  
 
-  // async signIn(username: string, pass: string):Promise<any> {
-  //   const user = await this.usersService.findByUsername(username);  
-  //   const isValidPassword = await comparePasswordHelper(pass, user.password)
-  //   if (!isValidPassword) {
-  //     throw new UnauthorizedException();
-  //   }
-  //   const payload = { sub: user._id, username: user.username };
-  //   return {
-  //     access_token: await this.jwtService.signAsync(payload),
-  //   };
-  // }
 }
