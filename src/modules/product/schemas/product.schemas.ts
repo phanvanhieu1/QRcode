@@ -1,8 +1,7 @@
 import { ProductCategory, ProductStatus } from "@/decorator/enum";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { HydratedDocument } from "mongoose";
+import  { HydratedDocument } from "mongoose";
 import slugify from 'slugify';
-import translate from 'google-translate-api'; // Thư viện dịch
 
 export type productDocument = HydratedDocument<product>;
 @Schema({timestamps: true})
