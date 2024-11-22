@@ -1,36 +1,39 @@
-import { OrderStatus, PaymentMethod } from "@/decorator/enum";
-import { product } from "@/modules/product/schemas/product.schemas";
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { Types } from "mongoose";
-
+import { OrderStatus, PaymentMethod } from '@/decorator/enum';
+import { product } from '@/modules/product/schemas/product.schemas';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose, { Types } from 'mongoose';
 
 @Schema()
 export class OrderItem {
   @Prop({ required: true })
   quantity: number;
 
-  @Prop({ required: true })
+  @Prop()
   amount: number;
 
   @Prop({ type: Types.ObjectId, ref: 'Product', required: true })
   product: Types.ObjectId;
 }
 
-
-@Schema({timestamps: true})
+@Schema({ timestamps: true })
 export class order {
+  @Prop({ required: true })
+  sessionId: string;
 
   @Prop()
   tableNumber: number;
 
-
   @Prop()
-  nameGuest  : string;
+  nameGuest: string;
 
-  @Prop({default: 0})
-  discount  : number;
+  @Prop({ default: 0 })
+  discount: number;
 
-  @Prop({ type: String, enum: Object.values(PaymentMethod), default: PaymentMethod.CASH }) 
+  @Prop({
+    type: String,
+    enum: Object.values(PaymentMethod),
+    default: PaymentMethod.CASH,
+  })
   paymentMethod: PaymentMethod;
 
   @Prop({ type: [OrderItem], default: [] })
@@ -39,36 +42,40 @@ export class order {
   @Prop({ default: 0 })
   totalBill: number;
 
-  @Prop({ type: String, enum: Object.values(OrderStatus), default: OrderStatus.PLACED })
+  @Prop({
+    type: String,
+    enum: Object.values(OrderStatus),
+    default: OrderStatus.PLACED,
+  })
   status: OrderStatus;
 
-  @Prop({default: 0})
-  customerAmount  : number;
+  @Prop({ default: 0 })
+  customerAmount: number;
 
-  @Prop({default: 0})
-  excessiveAmount  : number;
+  @Prop({ default: 0 })
+  excessiveAmount: number;
 
-  @Prop({default: ""})
-  userReceive  : string;
+  @Prop({ default: '' })
+  userReceive: string;
 
-  @Prop({default: ""})
-  note: string
+  @Prop({ default: '' })
+  note: string;
 
   @Prop({ type: [OrderItem], default: [] })
   returnedItems: OrderItem[];
 
-  @Prop({ type: Date }) 
+  @Prop({ type: Date })
   createdAt: Date;
 
-  @Prop({ type: Date }) 
+  @Prop({ type: Date })
   updatedAt: Date;
-
-
 }
-
 
 export const orderSchema = SchemaFactory.createForClass(order);
 orderSchema.pre<order>('save', function (next) {
-  this.totalBill = this.items.reduce((sum, item) => sum + (item.amount * item.quantity), 0);
-  next(); 
+  this.totalBill = this.items.reduce(
+    (sum, item) => sum + item.amount * item.quantity,
+    0,
+  );
+  next();
 });

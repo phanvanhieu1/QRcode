@@ -10,77 +10,77 @@ import aqp from 'api-query-params';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(user.name) 
-    private userModel: Model<user>
+    @InjectModel(user.name)
+    private userModel: Model<user>,
   ) {}
-  
+
   async create(createUser: CreateUserDto) {
-    const {username, password} = createUser
-    const hashpassword = await hashPasswordHelper(createUser.password)
+    const { username, password, role } = createUser;
+    const hashpassword = await hashPasswordHelper(password);
     const user = await this.userModel.create({
-      role: "EMPLOYEE",
-      username,  
-      password: hashpassword
-    })
+      role: role,
+      username,
+      password: hashpassword,
+    });
     return {
-      _id: user._id
-    }
+      _id: user._id,
+    };
   }
 
   async check(table: string) {
-    const rs = await this.userModel.findOne({username: table})
-    return rs
+    const rs = await this.userModel.findOne({ username: table });
+    return rs;
   }
 
   async checkUser(_id: string) {
-    const rs = await this.userModel.findOne({_id: _id})
-    return rs
+    const rs = await this.userModel.findOne({ _id: _id });
+    return rs;
   }
 
   async deleteTable(_id: string) {
-    const rs = await this.userModel.deleteOne({_id: _id})
-    return rs
+    const rs = await this.userModel.deleteOne({ _id: _id });
+    return rs;
   }
 
   async createTable(data: any) {
     return await this.userModel.create({
       username: data.tableNumber,
-      password: data.password
-    })
+      password: data.password,
+    });
   }
 
   async findAllTable(query: string, current: number, pageSize: number) {
-    const {filter, sort} =  aqp(query);
+    const { filter, sort } = aqp(query);
     filter.role = 'GUEST';
-    if(filter.current) delete filter.current;
-    if(filter.pageSize) delete filter.pageSize;
+    if (filter.current) delete filter.current;
+    if (filter.pageSize) delete filter.pageSize;
 
-    if(!current) current = 1;
-    if(!pageSize) pageSize = 10;
+    if (!current) current = 1;
+    if (!pageSize) pageSize = 10;
 
     const totalItems = (await this.userModel.find(filter)).length;
     const totalPages = Math.ceil(totalItems / pageSize);
-    const skip = (current - 1) * (pageSize);
+    const skip = (current - 1) * pageSize;
     const rs = await this.userModel
-    .find(filter)
-    .limit(pageSize)
-    .skip(skip)
-    .sort(sort as any)
-    .select("-_id")
-    .select("-role")
-    .select("-password")
+      .find(filter)
+      .limit(pageSize)
+      .skip(skip)
+      .sort(sort as any)
+      .select('-_id')
+      .select('-role')
+      .select('-password');
 
-    const result = rs.map(item => {
+    const result = rs.map((item) => {
       const { username, ...rest } = item.toObject();
       return { bàn: username, ...rest };
-  });
-    
-  return { result, totalPages };
+    });
+
+    return { result, totalPages };
   }
 
   async findByUsername(username: string) {
-    const rs =  await this.userModel.findOne({username})
-    return rs
+    const rs = await this.userModel.findOne({ username });
+    return rs;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
