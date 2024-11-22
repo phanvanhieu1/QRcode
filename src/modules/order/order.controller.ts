@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { OrderService } from './order.service';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { CartDto } from './dto/create-order.dto';
@@ -7,7 +17,6 @@ import { RoleGuard } from '@/auth/authorization/auth.guard';
 import { Order } from './entities/order.entity';
 import { AddItemsDto } from './dto/add-Item.dto';
 import { RemoveItemsDto } from './dto/remove-item.dto';
-import { Public } from '@/decorator/customize';
 import { OrderStatus } from '@/decorator/enum';
 
 @Controller('order')
@@ -18,11 +27,18 @@ export class OrderController {
   @Roles('GUEST')
   @UseGuards(RoleGuard)
   orderItem(@Body() data: CartDto, @Req() req) {
-    return this.orderService.create(data, req.user.username);
+    return this.orderService.create(data, req.user.username, req.user.userId);
+  }
+
+  @Post(':id/confirm')
+  @Roles('EMPLOYEE')
+  @UseGuards(RoleGuard)
+  confirmOrder(@Param('id') id: string) {
+    return this.orderService.confirmOrder(id);
   }
 
   @Post(':id/status')
-  @Roles('EMPLOYEE')
+  @Roles('CHEFF')
   @UseGuards(RoleGuard)
   updateOrderToNextStatus(@Param('id') id: string) {
     return this.orderService.updateOrderToNextStatus(id);
@@ -31,21 +47,25 @@ export class OrderController {
   @Post(':id/add-item')
   @Roles('GUEST')
   @UseGuards(RoleGuard)
-  addItemToOrder(
-  @Param('id') id: string,
-  @Body() addItemDto: AddItemsDto
-  ) {
-    return this.orderService.addItemToOrder(id, addItemDto)
+  addItemToOrder(@Param('id') id: string, @Body() addItemDto: AddItemsDto) {
+    return this.orderService.addItemToOrder(id, addItemDto);
   }
-  
+
   @Post(':id/remove-items')
   @Roles('GUEST')
   @UseGuards(RoleGuard)
   removeItemsFromOrder(
-  @Param('id') id: string,
-  @Body() removeItemsDto: RemoveItemsDto
+    @Param('id') id: string,
+    @Body() removeItemsDto: RemoveItemsDto,
   ) {
-    return this.orderService.removeItemsFromOrder(id, removeItemsDto)
+    return this.orderService.removeItemsFromOrder(id, removeItemsDto);
+  }
+
+  @Get('myorder')
+  @Roles('GUEST')
+  @UseGuards(RoleGuard)
+  findMyOrder(@Req() req): Promise<Order[]> {
+    return this.orderService.findMyOrder(req.user.userId);
   }
 
   @Get(':id')
@@ -56,57 +76,57 @@ export class OrderController {
   }
 
   @Get()
-  @Roles('EMPLOYEE', 'ADMIN')
+  @Roles('EMPLOYEE', 'ADMIN', 'CHEFF')
   @UseGuards(RoleGuard)
-  findAll(): Promise<Order[]> {
-    return this.orderService.findAll();
+  findAll(@Req() req): Promise<Order[]> {
+    return this.orderService.findAll(req.user.role);
   }
 
   @Post('sync-all-orders')
   @Roles('ADMIN')
   @UseGuards(RoleGuard)
   async syncAllOrdersToSheet() {
-  const orders = await this.orderService.getOrders(); 
-  const groupedData = orders.reduce((acc, order) => {
-    const date = order.createdAt.toISOString().slice(0, 10);
-    if (!acc[date]) {
-      acc[date] = {
-        totalOrders: 0,
-        cancelledOrders: 0,
-        completedOrders: 0,
-        revenue: 0,
-      };
-    }
+    const orders = await this.orderService.getOrders();
+    const groupedData = orders.reduce((acc, order) => {
+      const date = order.createdAt.toISOString().slice(0, 10);
+      if (!acc[date]) {
+        acc[date] = {
+          totalOrders: 0,
+          cancelledOrders: 0,
+          completedOrders: 0,
+          revenue: 0,
+        };
+      }
 
-    acc[date].totalOrders++;
-    if (order.status === OrderStatus.CANCELLED) {
-      acc[date].cancelledOrders++;
-    } else if (order.status === OrderStatus.COMPLETED) {
-      acc[date].completedOrders++;
-      acc[date].revenue += order.totalBill;
-    }
+      acc[date].totalOrders++;
+      if (order.status === OrderStatus.CANCELLED) {
+        acc[date].cancelledOrders++;
+      } else if (order.status === OrderStatus.COMPLETED) {
+        acc[date].completedOrders++;
+        acc[date].revenue += order.totalBill;
+      }
 
-    return acc;
-  }, {});
-  const values = Object.keys(groupedData).map(date => {
-    const { totalOrders, cancelledOrders, completedOrders, revenue } = groupedData[date];
-    return { date, totalOrders, cancelledOrders, completedOrders, revenue}  ;
-  });
-  return values
-}
+      return acc;
+    }, {});
+    const values = Object.keys(groupedData).map((date) => {
+      const { totalOrders, cancelledOrders, completedOrders, revenue } =
+        groupedData[date];
+      return { date, totalOrders, cancelledOrders, completedOrders, revenue };
+    });
+    return values;
+  }
 
-@Delete(':id/cancel')
-@Roles('EMPLOYEE')
-@UseGuards(RoleGuard)
-async cancelOrder(@Param('id') orderId: string) {
+  @Delete(':id/cancel')
+  @Roles('EMPLOYEE')
+  @UseGuards(RoleGuard)
+  async cancelOrder(@Param('id') orderId: string) {
     try {
-        const canceledOrder = await this.orderService.cancelOrder(orderId);
-        return { message: 'Đơn hàng đã được hủy', order: canceledOrder };
+      const canceledOrder = await this.orderService.cancelOrder(orderId);
+      return { message: 'Đơn hàng đã được hủy', order: canceledOrder };
     } catch (error) {
-        return { message: error.message };
+      return { message: error.message };
     }
-}
-
+  }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {

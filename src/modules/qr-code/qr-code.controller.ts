@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Query, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Request,
+  Query,
+  BadRequestException,
+} from '@nestjs/common';
 
 import { QrCodeService } from './qr-code.service';
 import { CreateQrCodeDto } from './dto/create-qr-code.dto';
@@ -15,24 +27,24 @@ import { bodyQrCodeDto } from './dto/body.dto';
 @Controller('qr-code')
 export class QrCodeController {
   constructor(
-    private readonly qrCodeService: QrCodeService, 
+    private readonly qrCodeService: QrCodeService,
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
   ) {}
-//tạo qr
+  //tạo qr
   @Post('sign-qr')
   @Roles('ADMIN')
   @UseGuards(RoleGuard)
   async generateQrCode(@Query('table') table: string) {
     if (!table) {
-      throw new BadRequestException("Table parameter is required")
+      throw new BadRequestException('Table parameter is required');
     }
     const qrCodeDataUrl = await this.qrCodeService.generateQrCode(table);
-    const base64Code = qrCodeDataUrl.split(",")[1];
-    await this.qrCodeService.saveQr(table, base64Code)
-    return base64Code
-}
-//tạo bàn
+    const base64Code = qrCodeDataUrl.split(',')[1];
+    await this.qrCodeService.saveQr(table, base64Code);
+    return base64Code;
+  }
+  //tạo bàn
   @Post('create')
   @Roles('ADMIN')
   @UseGuards(RoleGuard)
@@ -42,15 +54,11 @@ export class QrCodeController {
 
   @Post('login')
   @Public()
-  // @UseGuards(LocalAuthGuard)
-  async loginGUEST(
-    @Query('table') table: string,
-    @Body() body:bodyQrCodeDto 
-  ) {
+  async loginGUEST(@Query('table') table: string, @Body() body: bodyQrCodeDto) {
     if (!table) {
-      throw new BadRequestException("Table parameter is required")
+      throw new BadRequestException('Table parameter is required');
     }
-    return await this.authService.loginGUEST(table,body);
+    return await this.authService.loginGUEST(table, body);
   }
 
   @Get('login')
@@ -60,12 +68,12 @@ export class QrCodeController {
   }
 
   @Get()
-  @Roles('EMPLOYEE')
+  @Roles('EMPLOYEE', 'ADMIN')
   @UseGuards(RoleGuard)
   findAllTable(
     @Query() query: string,
-    @Query("current") current: string,
-    @Query("pageSize") pageSize: string,
+    @Query('current') current: string,
+    @Query('pageSize') pageSize: string,
   ) {
     return this.qrCodeService.findAllTable(query, +current, +pageSize);
   }
@@ -79,7 +87,7 @@ export class QrCodeController {
   update(@Param('id') id: string, @Body() updateQrCodeDto: UpdateQrCodeDto) {
     return this.qrCodeService.update(+id, updateQrCodeDto);
   }
-//xoá bàn
+  //xoá bàn
   @Delete(':id')
   @Roles('ADMIN')
   @UseGuards(RoleGuard)

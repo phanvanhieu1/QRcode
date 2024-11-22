@@ -1,21 +1,20 @@
 export enum OrderStatus {
-    PLACED = 'Đã đặt hàng',
-    CONFIRMED = 'Đã xác nhận',
-    COOKING = 'Đang nấu',
-    COMPLETED = 'Hoàn thành',
-    PAID = "Đã thanh toán",
-    CANCELLED = 'Hủy đơn hàng',
-  }
+  PLACED = 'Đã đặt hàng',
+  CONFIRMED = 'Đã xác nhận',
+  COOKING = 'Đang nấu',
+  COMPLETED = 'Hoàn thành',
+  PAID = 'Đã thanh toán',
+  CANCELLED = 'Hủy đơn hàng',
+}
 
+export enum PaymentMethod {
+  CASH = 'Tiền mặt',
+  CARD = 'Thẻ',
+}
 
-  export enum PaymentMethod {
-    CASH = 'Tiền mặt',
-    CARD = 'Thẻ',  
-  }
-
-  export enum ProductStatus {
-    IN_STOCK = 'Còn món',
-    OUT_OF_STOCK = 'Hết món',
+export enum ProductStatus {
+  IN_STOCK = 'Còn món',
+  OUT_OF_STOCK = 'Hết món',
 }
 
 export enum ProductCategory {
@@ -30,5 +29,8 @@ export enum ProductCategory {
   BOTTLED_DRINKS = 'Đồ uống đóng chai',
 }
 
-  
-  
+export enum Role {
+  EMPLOYEE = 'EMPLOYEE',
+  GUEST = 'GUEST',
+  CHEFF = 'CHEFF',
+}
