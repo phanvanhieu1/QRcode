@@ -3,6 +3,7 @@ export enum OrderStatus {
   CONFIRMED = 'Đã xác nhận',
   COOKING = 'Đang nấu',
   COMPLETED = 'Hoàn thành',
+  PAYMENT = 'Yêu cầu thanh toán',
   PAID = 'Đã thanh toán',
   CANCELLED = 'Hủy đơn hàng',
 }
@@ -30,6 +31,7 @@ export enum ProductCategory {
 }
 
 export enum Role {
+  ROOT = 'ROOT',
   EMPLOYEE = 'EMPLOYEE',
   GUEST = 'GUEST',
   CHEFF = 'CHEFF',

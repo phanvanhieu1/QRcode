@@ -33,15 +33,29 @@ export class OrderService {
   }
 
   async findAll(role: any) {
-    let filter = {};
+    let filter: any = {};
     if (role === 'CHEFF') {
-      filter = { status: OrderStatus.CONFIRMED };
-    } else if (role === 'EMPLOYEE') {
-      filter = { status: { $in: [OrderStatus.PLACED, OrderStatus.COMPLETED] } };
+      filter = {
+        status: {
+          $in: [
+            OrderStatus.CONFIRMED,
+            OrderStatus.COOKING,
+            OrderStatus.COMPLETED,
+          ],
+        },
+        inProcess: true,
+      };
+    } else if (role === 'EMPLOYEE' || role === 'ADMIN') {
+      filter = {};
+    } else {
+      throw new Error('Invalid role');
     }
+    const fieldsToExcludeForCheff =
+      '-sessionId -discount -paymentMethod -inProcess -customerAmount -excessiveAmount -isDone';
     if (role === 'CHEFF') {
       return await this.orderModel
-        .find(filter, 'items, status')
+        .find(filter)
+        .select(fieldsToExcludeForCheff)
         .populate({
           path: 'items.product',
           model: 'product',
@@ -70,7 +84,7 @@ export class OrderService {
   }
 
   async findMyOrder(sessionId: string) {
-    return await this.orderModel
+    const rs = await this.orderModel
       .find({
         sessionId: sessionId,
       })
@@ -79,6 +93,64 @@ export class OrderService {
         model: 'product',
       })
       .exec();
+    return rs;
+  }
+
+  async requestPayment(id: string, sessionId: any): Promise<any> {
+    const checkUser = await this.findMyOrder(sessionId);
+
+    const orderExists = checkUser.some((order) => order._id.toString() === id);
+
+    if (!orderExists) {
+      throw new NotFoundException(
+        `Không tìm thấy đơn hàng với ID ${id} của người dùng này`,
+      );
+    }
+    const order = await this.orderModel.findById(id);
+
+    if (!order) {
+      throw new NotFoundException(`Không tìm thấy đơn hàng với ID ${id}`);
+    }
+    if (order.status !== OrderStatus.COMPLETED) {
+      throw new BadRequestException(
+        'Đơn hàng phải ở trạng thái "Hoàn thành" để yêu cầu thanh toán',
+      );
+    }
+    await this.orderModel.findByIdAndUpdate(
+      id,
+      { $set: { status: OrderStatus.PAYMENT } },
+      { new: true },
+    );
+
+    return `Đơn hàng đã yêu cầu thanh toán thành công`;
+  }
+
+  async confirmPayment(id: any): Promise<any> {
+    const check = await this.orderModel.findById(id);
+    if (!check) {
+      throw new NotFoundException(`Không tìm thấy đơn hàng với ID ${id}`);
+    }
+    if (check.status !== OrderStatus.PAYMENT) {
+      throw new BadRequestException(
+        'Đơn hàng phải có trạng thái "Yêu cầu thanh toán" để xác nhận thanh toán',
+      );
+    }
+    const updatedOrder = await this.orderModel.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          status: OrderStatus.PAID,
+          isDone: true,
+        },
+      },
+      { new: true },
+    );
+
+    if (!updatedOrder) {
+      throw new BadRequestException('Cập nhật trạng thái thanh toán thất bại');
+    }
+
+    return `Đơn hàng ID ${id} đã được xác nhận thanh toán thành công`;
   }
 
   private getNextStatus(currentStatus: OrderStatus): OrderStatus | null {
@@ -109,13 +181,13 @@ export class OrderService {
     }
     const rs = await this.orderModel.findByIdAndUpdate(
       orderId,
-      { $set: { status: OrderStatus.CONFIRMED } },
+      { $set: { status: OrderStatus.CONFIRMED, inProcess: true } },
       { new: true },
     );
     return rs;
   }
 
-  async updateOrderToNextStatus(id: string): Promise<any> {
+  async updateOrderToNextStatus(id: string, role: any): Promise<any> {
     const order = await this.orderModel.findById({
       _id: id,
     });
@@ -123,19 +195,42 @@ export class OrderService {
     if (!order) {
       throw new NotFoundException(`Không tìm thấy đơn hàng với ID ${id}`);
     }
+    const allowedStatusesForCheff = [
+      OrderStatus.CONFIRMED,
+      OrderStatus.COOKING,
+      OrderStatus.COMPLETED,
+    ];
+    if (role === 'CHEFF') {
+      if (!allowedStatusesForCheff.includes(order.status)) {
+        throw new BadRequestException(
+          `CHEFF chỉ được phép cập nhật từ CONFIRMED => COOKING => COMPLETED. Hiện trạng thái là: ${order.status}`,
+        );
+      }
+    }
 
     const nextStatus = this.getNextStatus(order.status);
     if (!nextStatus) {
       throw new BadRequestException('Trạng thái đơn hàng không hợp lệ');
     }
 
-    const updatedOrder = await this.orderModel.findByIdAndUpdate(
+    if (role === 'CHEFF' && !allowedStatusesForCheff.includes(nextStatus)) {
+      throw new BadRequestException(
+        `CHEFF không được phép cập nhật trạng thái: ${nextStatus}`,
+      );
+    }
+
+    const updateData: any = { status: nextStatus };
+    if (nextStatus === OrderStatus.COMPLETED) {
+      updateData.inProcess = false;
+    }
+
+    await this.orderModel.findByIdAndUpdate(
       id,
-      { $set: { status: nextStatus } },
+      { $set: updateData },
       { new: true },
     );
 
-    return updatedOrder;
+    return `Update thành công`;
   }
 
   async addItemToOrder(id: string, addItemsDto: any): Promise<any> {
@@ -254,6 +349,11 @@ export class OrderService {
     }
     order.status = OrderStatus.CANCELLED;
     return await order.save();
+  }
+
+  async deleteAllOrders(): Promise<{ deletedCount: number }> {
+    const result = await this.orderModel.deleteMany({});
+    return { deletedCount: result.deletedCount }; // Số lượng đơn hàng đã bị xóa
   }
 
   update(id: number, updateOrderDto: UpdateOrderDto) {
