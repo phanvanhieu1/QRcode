@@ -30,6 +30,20 @@ export class OrderController {
     return this.orderService.create(data, req.user.username, req.user.userId);
   }
 
+  @Post(':id/requestPayment')
+  @Roles('GUEST')
+  @UseGuards(RoleGuard)
+  requestPayment(@Param('id') id: string, @Req() req) {
+    return this.orderService.requestPayment(id, req.user.userId);
+  }
+
+  @Post(':id/confirmPayment')
+  @Roles('EMPLOYEE')
+  @UseGuards(RoleGuard)
+  confirmPayment(@Param('id') id: string) {
+    return this.orderService.confirmPayment(id);
+  }
+
   @Post(':id/confirm')
   @Roles('EMPLOYEE')
   @UseGuards(RoleGuard)
@@ -40,8 +54,8 @@ export class OrderController {
   @Post(':id/status')
   @Roles('CHEFF')
   @UseGuards(RoleGuard)
-  updateOrderToNextStatus(@Param('id') id: string) {
-    return this.orderService.updateOrderToNextStatus(id);
+  updateOrderToNextStatus(@Param('id') id: string, @Req() req) {
+    return this.orderService.updateOrderToNextStatus(id, req.user.role);
   }
 
   @Post(':id/add-item')
@@ -126,6 +140,13 @@ export class OrderController {
     } catch (error) {
       return { message: error.message };
     }
+  }
+
+  @Delete('delete-all')
+  @Roles('ROOT')
+  @UseGuards(RoleGuard)
+  async deleteAllOrders() {
+    return await this.orderService.deleteAllOrders();
   }
 
   @Patch(':id')

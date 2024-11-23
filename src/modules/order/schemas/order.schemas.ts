@@ -49,6 +49,12 @@ export class order {
   })
   status: OrderStatus;
 
+  @Prop({ default: false })
+  inProcess: boolean;
+
+  @Prop({ default: false })
+  isDone: boolean;
+
   @Prop({ default: 0 })
   customerAmount: number;
 
