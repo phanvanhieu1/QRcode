@@ -67,6 +67,20 @@ export class QrCodeController {
     return { message: `Đăng nhập thành công cho bàn ${tableId}` };
   }
 
+  @Get('detailQr/:table')
+  @Roles('ADMIN')
+  @UseGuards(RoleGuard)
+  findOne(@Param('table') table: string) {
+    return this.qrCodeService.findOne(table);
+  }
+
+  @Get('allQr')
+  @Roles('ADMIN')
+  @UseGuards(RoleGuard)
+  findallQr() {
+    return this.qrCodeService.findallQr();
+  }
+
   @Get()
   @Roles('EMPLOYEE', 'ADMIN')
   @UseGuards(RoleGuard)
@@ -76,11 +90,6 @@ export class QrCodeController {
     @Query('pageSize') pageSize: string,
   ) {
     return this.qrCodeService.findAllTable(query, +current, +pageSize);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.qrCodeService.findOne(+id);
   }
 
   @Patch(':id')
