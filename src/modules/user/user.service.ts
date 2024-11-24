@@ -66,7 +66,6 @@ export class UserService {
       .limit(pageSize)
       .skip(skip)
       .sort(sort as any)
-      .select('-_id')
       .select('-role')
       .select('-password');
 
