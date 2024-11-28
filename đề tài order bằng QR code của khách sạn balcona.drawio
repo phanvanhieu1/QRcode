@@ -1402,7 +1402,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="4CeoRe95daTF64-cKlBV" name="thiết kế csdl">
-    <mxGraphModel dx="1397" dy="697" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="4681" math="0" shadow="0">
+    <mxGraphModel dx="1509" dy="753" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="4681" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1440,7 +1440,7 @@
           <mxGeometry y="260" width="140" height="26" as="geometry" />
         </mxCell>
         <mxCell id="wQCrHswlSxVXV_os4Irr-13" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;text-decoration:underline;&quot;&gt;&lt;b&gt;status&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;IN_STOCK = còn món&lt;br&gt;OUT_OF_STOCK= hết món&lt;br&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" parent="1" vertex="1">
-          <mxGeometry x="920" y="360" width="160" height="70" as="geometry" />
+          <mxGeometry x="920" y="410" width="160" height="70" as="geometry" />
         </mxCell>
         <mxCell id="wQCrHswlSxVXV_os4Irr-15" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;text-decoration:underline;&quot;&gt;&lt;b&gt;category&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;APPETIZER = &#39;Món khai vị&#39;, MAIN_COURSE = &#39;Món chính&#39;, DESSERT = &#39;Món tráng miệng&#39;, BEVERAGE = &#39;Đồ uống&#39;, SIDE_DISH = &#39;Món phụ&#39;, SALAD = &#39;Salad&#39;,&amp;nbsp;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;SOUP = &#39;Súp&#39;,&amp;nbsp;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;SNACK = &#39;Ăn vặt&#39;, BOTTLED_DRINKS = &#39;Đồ uống đóng chai&#39;,&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" parent="1" vertex="1">
           <mxGeometry x="380" y="270" width="180" height="180" as="geometry" />
@@ -1485,7 +1485,7 @@
           <mxGeometry y="26" width="140" height="64" as="geometry" />
         </mxCell>
         <mxCell id="wQCrHswlSxVXV_os4Irr-51" value="user" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=#ffe6cc;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;strokeColor=#d79b00;" parent="1" vertex="1">
-          <mxGeometry x="1030" y="210" width="140" height="130" as="geometry" />
+          <mxGeometry x="940" y="210" width="140" height="130" as="geometry" />
         </mxCell>
         <mxCell id="wQCrHswlSxVXV_os4Irr-52" value="userID:string" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" parent="wQCrHswlSxVXV_os4Irr-51" vertex="1">
           <mxGeometry y="26" width="140" height="26" as="geometry" />
@@ -1524,7 +1524,7 @@
           <mxGeometry y="182" width="140" height="26" as="geometry" />
         </mxCell>
         <mxCell id="wQCrHswlSxVXV_os4Irr-65" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;text-decoration:underline;&quot;&gt;&lt;b&gt;role&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;ADMIN= &#39;quản lý&#39;&lt;br&gt;EMPLOYEE= &#39;nhân viên tiếp tân&#39;&lt;br&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;CHEFF = &#39;nhân viên bếp&#39;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;GUEST = &#39;khách hàng&#39;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;&lt;br&gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" parent="1" vertex="1">
-          <mxGeometry x="1250" y="210" width="160" height="130" as="geometry" />
+          <mxGeometry x="1160" y="210" width="160" height="130" as="geometry" />
         </mxCell>
         <mxCell id="wQCrHswlSxVXV_os4Irr-88" value="" style="fontSize=12;html=1;endArrow=ERmany;startArrow=ERmany;rounded=0;entryX=0.514;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="wQCrHswlSxVXV_os4Irr-19" target="wQCrHswlSxVXV_os4Irr-11" edge="1">
           <mxGeometry width="100" height="100" relative="1" as="geometry">
