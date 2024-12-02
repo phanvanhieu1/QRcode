@@ -10,8 +10,9 @@ import {
   Request,
   Query,
   BadRequestException,
+  Res,
 } from '@nestjs/common';
-
+import { Response } from 'express';
 import { QrCodeService } from './qr-code.service';
 import { CreateQrCodeDto } from './dto/create-qr-code.dto';
 import { UpdateQrCodeDto } from './dto/update-qr-code.dto';
@@ -19,9 +20,6 @@ import { Roles } from '@/auth/authorization/roles.decorator';
 import { RoleGuard } from '@/auth/authorization/auth.guard';
 import { AuthService } from '@/auth/auth.service';
 import { Public } from '@/decorator/customize';
-import { loginQrCodeDto } from './dto/loginqrCode.dto';
-import { LocalAuthGuard } from '@/auth/passport/local-auth.guard';
-import { ConfigService } from '@nestjs/config';
 import { bodyQrCodeDto } from './dto/body.dto';
 
 @Controller('qr-code')
@@ -29,7 +27,6 @@ export class QrCodeController {
   constructor(
     private readonly qrCodeService: QrCodeService,
     private readonly authService: AuthService,
-    private readonly configService: ConfigService,
   ) {}
   //tạo qr
   @Post('sign-qr')
@@ -58,13 +55,14 @@ export class QrCodeController {
     if (!table) {
       throw new BadRequestException('Table parameter is required');
     }
-    return await this.authService.loginGUEST(table, body);
+    const token = await this.authService.loginGUEST(table, body);
+    return token;
   }
 
   @Get('login')
   @Public()
-  async login(@Query('table') tableId: string) {
-    return { message: `Đăng nhập thành công cho bàn ${tableId}` };
+  async login(@Query('table') tableId: string, @Res() res: Response) {
+    return res.redirect('https://www.facebook.com');
   }
 
   @Get('detailQr/:table')

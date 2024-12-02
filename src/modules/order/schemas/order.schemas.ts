@@ -9,7 +9,7 @@ export class OrderItem {
   quantity: number;
 
   @Prop()
-  amount: number;
+  price: number;
 
   @Prop({ type: Types.ObjectId, ref: 'Product', required: true })
   product: Types.ObjectId;
@@ -56,10 +56,10 @@ export class order {
   isDone: boolean;
 
   @Prop({ default: 0 })
-  customerAmount: number;
+  customerprice: number;
 
   @Prop({ default: 0 })
-  excessiveAmount: number;
+  excessiveprice: number;
 
   @Prop({ default: '' })
   userReceive: string;
@@ -78,10 +78,3 @@ export class order {
 }
 
 export const orderSchema = SchemaFactory.createForClass(order);
-orderSchema.pre<order>('save', function (next) {
-  this.totalBill = this.items.reduce(
-    (sum, item) => sum + item.amount * item.quantity,
-    0,
-  );
-  next();
-});

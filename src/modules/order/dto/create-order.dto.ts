@@ -17,7 +17,7 @@ export class CartItemDto {
   @IsPositive({ message: 'số lượng phải là số dương' })
   quantity: number;
   @IsOptional()
-  amount: number;
+  price: number;
 }
 
 export class CartDto {
