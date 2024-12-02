@@ -1,28 +1,40 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document, Types } from "mongoose";
-import { product } from "@/modules/product/schemas/product.schemas";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
+import { product } from '@/modules/product/schemas/product.schemas';
 
 export type ComboDocument = Document & Combo;
+
+@Schema()
+export class ComboItem {
+  @Prop({ required: true })
+  quantity: number;
+
+  @Prop({ type: Types.ObjectId, ref: 'Product', required: true })
+  product: Types.ObjectId;
+}
 
 @Schema({ timestamps: true })
 export class Combo {
   @Prop()
   name: string;
 
-  @Prop({ type: [Types.ObjectId], ref: product.name })
-  items: Types.ObjectId[]; 
+  @Prop({ type: [ComboItem], default: [] })
+  items: ComboItem[];
 
   @Prop({ required: true })
-  price: number; 
+  price: number;
 
   @Prop()
-  description: string; 
+  description: string;
 
   @Prop([String])
-  image: string[]; 
+  images: string[];
+
+  @Prop({ default: 0 })
+  discount: number;
 
   @Prop({ default: true })
-  isActive: boolean;
+  isAvailable: boolean;
 }
 
 export const ComboSchema = SchemaFactory.createForClass(Combo);

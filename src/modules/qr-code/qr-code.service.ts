@@ -21,7 +21,7 @@ export class QrCodeService {
   };
 
   async generateQrCode(tableId: string): Promise<string> {
-    const url = `${process.env.HOSTNAME}/api/v1/qr-code/login?table=${tableId}`;
+    const url = `${process.env.HOSTNAME}/login?table=${tableId}`;
     return await QRCode.toDataURL(url);
   }
 

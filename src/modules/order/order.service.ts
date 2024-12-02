@@ -51,7 +51,7 @@ export class OrderService {
       throw new Error('Invalid role');
     }
     const fieldsToExcludeForCheff =
-      '-sessionId -discount -paymentMethod -inProcess -customerAmount -excessiveAmount -isDone';
+      '-sessionId -discount -paymentMethod -inProcess -customerprice -excessiveprice -isDone';
     if (role === 'CHEFF') {
       return await this.orderModel
         .find(filter)
@@ -265,12 +265,12 @@ export class OrderService {
 
       if (existingItem) {
         existingItem.quantity += item.quantity;
-        existingItem.amount += item.amount;
+        existingItem.price += item.price;
       } else {
         order.items.push({
           product: item.itemId,
           quantity: item.quantity,
-          amount: item.amount,
+          price: item.price,
         });
       }
     }

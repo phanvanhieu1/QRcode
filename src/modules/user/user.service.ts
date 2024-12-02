@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -78,9 +82,9 @@ export class UserService {
   }
 
   async findByUsername(username: string) {
-    const rs = await this.userModel.findOne({ username });
-    return rs;
-  }
+    const user = await this.userModel.findOne({ username });
+    return user;
+  } //a
 
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
