@@ -16,7 +16,7 @@ import { Roles } from '@/auth/authorization/roles.decorator';
 import { RoleGuard } from '@/auth/authorization/auth.guard';
 import { Order } from './entities/order.entity';
 import { AddItemsDto } from './dto/add-Item.dto';
-import { RemoveItemsDto } from './dto/remove-item.dto';
+import { CancelOrderDto, RemoveItemsDto } from './dto/remove-item.dto';
 import { OrderStatus } from '@/decorator/enum';
 
 @Controller('order')
@@ -34,7 +34,11 @@ export class OrderController {
   @Roles('GUEST')
   @UseGuards(RoleGuard)
   requestPayment(@Param('id') id: string, @Req() req) {
-    return this.orderService.requestPayment(id, req.user.userId);
+    return this.orderService.requestPayment(
+      id,
+      req.user.userId,
+      req.body.method,
+    );
   }
 
   @Post(':id/confirmPayment')
@@ -130,12 +134,18 @@ export class OrderController {
     return values;
   }
 
-  @Delete(':id/cancel')
+  @Post(':id/cancel')
   @Roles('EMPLOYEE')
   @UseGuards(RoleGuard)
-  async cancelOrder(@Param('id') orderId: string) {
+  async cancelOrder(
+    @Param('id') orderId: string,
+    @Body() note: CancelOrderDto,
+  ) {
     try {
-      const canceledOrder = await this.orderService.cancelOrder(orderId);
+      const canceledOrder = await this.orderService.cancelOrder(
+        orderId,
+        note.note,
+      );
       return { message: 'Đơn hàng đã được hủy', order: canceledOrder };
     } catch (error) {
       return { message: error.message };

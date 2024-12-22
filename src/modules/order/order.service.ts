@@ -96,9 +96,8 @@ export class OrderService {
     return rs;
   }
 
-  async requestPayment(id: string, sessionId: any): Promise<any> {
+  async requestPayment(id: string, sessionId: any, method: any): Promise<any> {
     const checkUser = await this.findMyOrder(sessionId);
-
     const orderExists = checkUser.some((order) => order._id.toString() === id);
 
     if (!orderExists) {
@@ -118,7 +117,7 @@ export class OrderService {
     }
     await this.orderModel.findByIdAndUpdate(
       id,
-      { $set: { status: OrderStatus.PAYMENT } },
+      { $set: { status: OrderStatus.PAYMENT, paymentMethod: method } },
       { new: true },
     );
 
@@ -327,7 +326,7 @@ export class OrderService {
     return await this.orderModel.find();
   }
 
-  async cancelOrder(orderId: string): Promise<order> {
+  async cancelOrder(orderId: string, note: any): Promise<order> {
     const order = await this.orderModel.findById(orderId);
     if (!order) {
       throw new NotFoundException('Đơn hàng không tồn tại');
@@ -348,6 +347,7 @@ export class OrderService {
         throw new BadRequestException('Trạng thái đơn hàng không hợp lệ.');
     }
     order.status = OrderStatus.CANCELLED;
+    order.note = note;
     return await order.save();
   }
 
