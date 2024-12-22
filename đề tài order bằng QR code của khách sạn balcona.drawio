@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" version="25.0.3" pages="4">
   <diagram id="lyzBDwEMLQQLgCGGaO-s" name="workfollow bản chính">
-    <mxGraphModel dx="8778" dy="2131" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
+    <mxGraphModel dx="9461" dy="2487" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4681" pageHeight="3300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1236,11 +1236,35 @@
         <mxCell id="6ZaGGLD91fArq_6YsTEY-105" value="kết thúc" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e51400;fontColor=#ffffff;strokeColor=#B20000;" vertex="1" parent="6ZaGGLD91fArq_6YsTEY-293">
           <mxGeometry x="3330" y="250" width="120" height="80" as="geometry" />
         </mxCell>
+        <mxCell id="6ZaGGLD91fArq_6YsTEY-301" value="nhân viên bếp" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=16;" vertex="1" parent="6ZaGGLD91fArq_6YsTEY-293">
+          <mxGeometry x="2810" y="290" width="30" height="60" as="geometry" />
+        </mxCell>
         <mxCell id="6ZaGGLD91fArq_6YsTEY-294" value="quản lý" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;swimlaneFillColor=none;gradientColor=none;strokeWidth=3;strokeColor=#ff0000;" vertex="1" parent="1">
           <mxGeometry x="-4240" y="1970" width="3480" height="940" as="geometry" />
         </mxCell>
         <mxCell id="6ZaGGLD91fArq_6YsTEY-290" value="bắt đầu" style="ellipse;whiteSpace=wrap;html=1;fontSize=18;fillColor=#f0a30a;strokeColor=#BD7000;fontColor=#000000;" vertex="1" parent="6ZaGGLD91fArq_6YsTEY-294">
           <mxGeometry x="154.82000000000016" y="840" width="110" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6ZaGGLD91fArq_6YsTEY-296" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="6ZaGGLD91fArq_6YsTEY-295" target="6ZaGGLD91fArq_6YsTEY-284">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6ZaGGLD91fArq_6YsTEY-295" value="khách hàng" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="-4320" y="1040" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6ZaGGLD91fArq_6YsTEY-300" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="6ZaGGLD91fArq_6YsTEY-297" target="6ZaGGLD91fArq_6YsTEY-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6ZaGGLD91fArq_6YsTEY-297" value="nhân viên phục vụ" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="-4320" y="1350" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6ZaGGLD91fArq_6YsTEY-299" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="6ZaGGLD91fArq_6YsTEY-298" target="6ZaGGLD91fArq_6YsTEY-43">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6ZaGGLD91fArq_6YsTEY-298" value="quản lý" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="-4340" y="2080" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6ZaGGLD91fArq_6YsTEY-302" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="6ZaGGLD91fArq_6YsTEY-301" target="6ZaGGLD91fArq_6YsTEY-161">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
