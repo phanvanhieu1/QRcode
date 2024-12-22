@@ -1,7 +1,13 @@
-import { IsArray, IsNotEmpty } from 'class-validator';
+import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 
 export class RemoveItemsDto {
-    @IsArray()
-    @IsNotEmpty()
-    items: string[];
+  @IsArray()
+  @IsNotEmpty()
+  items: string[];
+}
+
+export class CancelOrderDto {
+  @IsNotEmpty()
+  @IsString()
+  note: string;
 }
