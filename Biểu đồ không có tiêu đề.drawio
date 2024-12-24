@@ -1,11 +1,11 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" version="25.0.3">
   <diagram name="Trang-1" id="KUGLHPBJDXLbqY33dowA">
-    <mxGraphModel dx="2049" dy="1066" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1200" math="0" shadow="0">
+    <mxGraphModel dx="2390" dy="1243" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1200" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="tp8tk3ZOuLwhO5mAe-Hx-1" value="qrCode - use case" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;recursiveResize=0;container=1;collapsible=0;width=160;" parent="1" vertex="1">
-          <mxGeometry x="180" y="360" width="1570" height="1890" as="geometry" />
+          <mxGeometry x="180" y="360" width="1570" height="1583" as="geometry" />
         </mxCell>
         <mxCell id="WepjOPcnquh5TteQ4RRN-25" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="tp8tk3ZOuLwhO5mAe-Hx-1" edge="1">
           <mxGeometry relative="1" as="geometry">
