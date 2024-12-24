@@ -1,1 +1,1 @@
-export class Combo {}
+export class combo {}

@@ -4,6 +4,9 @@ export class RemoveItemsDto {
   @IsArray()
   @IsNotEmpty()
   items: string[];
+  @IsNotEmpty()
+  @IsString()
+  note: string;
 }
 
 export class CancelOrderDto {

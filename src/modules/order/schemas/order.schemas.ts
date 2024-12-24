@@ -8,10 +8,7 @@ export class OrderItem {
   @Prop({ required: true })
   quantity: number;
 
-  @Prop()
-  price: number;
-
-  @Prop({ type: Types.ObjectId, ref: 'Product', required: true })
+  @Prop({ type: Types.ObjectId, required: true })
   product: Types.ObjectId;
 }
 
@@ -39,6 +36,9 @@ export class order {
   @Prop({ type: [OrderItem], default: [] })
   items: OrderItem[];
 
+  @Prop({ type: String, enum: ['product', 'combo'], required: true })
+  type: 'product' | 'combo';
+
   @Prop({ default: 0 })
   totalBill: number;
 
@@ -64,8 +64,8 @@ export class order {
   @Prop({ default: '' })
   userReceive: string;
 
-  @Prop({ default: '' })
-  note: string;
+  @Prop({ default: [] })
+  note: [string];
 
   @Prop({ type: [OrderItem], default: [] })
   returnedItems: OrderItem[];

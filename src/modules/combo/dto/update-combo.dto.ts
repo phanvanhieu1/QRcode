@@ -9,7 +9,7 @@ import {
   IsMongoId,
 } from 'class-validator';
 
-class ComboItemDto {
+class comboItemDto {
   @IsNumber()
   quantity: number;
 
@@ -17,7 +17,7 @@ class ComboItemDto {
   product: string;
 }
 
-export class UpdateComboDto {
+export class UpdatecomboDto {
   @IsOptional()
   @IsString()
   name?: string;
@@ -29,8 +29,8 @@ export class UpdateComboDto {
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ComboItemDto)
-  items?: ComboItemDto[];
+  @Type(() => comboItemDto)
+  items?: comboItemDto[];
 
   @IsOptional()
   @IsNumber()

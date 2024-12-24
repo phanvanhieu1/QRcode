@@ -5,6 +5,7 @@ import {
   IsPositive,
   IsMongoId,
   IsOptional,
+  IsString,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Types } from 'mongoose';
@@ -16,8 +17,6 @@ export class CartItemDto {
   @IsNotEmpty()
   @IsPositive({ message: 'số lượng phải là số dương' })
   quantity: number;
-  @IsOptional()
-  price: number;
 }
 
 export class CartDto {
@@ -27,6 +26,9 @@ export class CartDto {
   @ValidateNested({ each: true })
   @Type(() => CartItemDto)
   items: CartItemDto[];
+  @IsNotEmpty()
+  @IsString({ message: 'type phải là combo hoặc product' })
+  type: string;
   @IsNotEmpty()
   totalBill: number;
 }
