@@ -2,10 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { product } from '@/modules/product/schemas/product.schemas';
 
-export type ComboDocument = Document & Combo;
+export type comboDocument = Document & combo;
 
 @Schema()
-export class ComboItem {
+export class comboItem {
   @Prop({ required: true })
   quantity: number;
 
@@ -14,12 +14,12 @@ export class ComboItem {
 }
 
 @Schema({ timestamps: true })
-export class Combo {
+export class combo {
   @Prop()
   name: string;
 
-  @Prop({ type: [ComboItem], default: [] })
-  items: ComboItem[];
+  @Prop({ type: [comboItem], default: [] })
+  items: comboItem[];
 
   @Prop({ required: true })
   price: number;
@@ -37,4 +37,4 @@ export class Combo {
   isAvailable: boolean;
 }
 
-export const ComboSchema = SchemaFactory.createForClass(Combo);
+export const comboSchema = SchemaFactory.createForClass(combo);

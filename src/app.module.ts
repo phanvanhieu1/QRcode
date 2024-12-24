@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
-import { ComboModule } from './modules/combo/combo.module';
+import { comboModule } from './modules/combo/combo.module';
 import { OrderModule } from './modules/order/order.module';
 import { ProductModule } from './modules/product/product.module';
 import { QrCodeModule } from './modules/qr-code/qr-code.module';
@@ -17,14 +17,14 @@ import 'dotenv/config';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath:'.env',
-      isGlobal:true,  
+      envFilePath: '.env',
+      isGlobal: true,
     }),
-    
+
     MongooseModule.forRoot(process.env.DB_URL),
-    ComboModule,
+    comboModule,
     OrderModule,
-    ProductModule ,
+    ProductModule,
     QrCodeModule,
     UserModule,
     AuthModule,
@@ -38,15 +38,15 @@ import 'dotenv/config';
     },
   ],
 })
-
-
 export class AppModule implements OnModuleInit {
   onModuleInit() {
-    mongoose.connect(process.env.DB_URL).then(() => {
-      console.log("connect ok");
-    })
-    .catch(()=>{
-      console.log("error")
-    })
-  } 
+    mongoose
+      .connect(process.env.DB_URL)
+      .then(() => {
+        console.log('connect ok');
+      })
+      .catch(() => {
+        console.log('error');
+      });
+  }
 }

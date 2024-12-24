@@ -62,15 +62,15 @@ export class OrderController {
     return this.orderService.updateOrderToNextStatus(id, req.user.role);
   }
 
-  @Post(':id/add-item')
-  @Roles('GUEST')
-  @UseGuards(RoleGuard)
-  addItemToOrder(@Param('id') id: string, @Body() addItemDto: AddItemsDto) {
-    return this.orderService.addItemToOrder(id, addItemDto);
-  }
+  // @Post(':id/add-item')
+  // @Roles('GUEST')
+  // @UseGuards(RoleGuard)
+  // addItemToOrder(@Param('id') id: string, @Body() addItemDto: AddItemsDto) {
+  //   return this.orderService.addItemToOrder(id, addItemDto);
+  // }
 
   @Post(':id/remove-items')
-  @Roles('GUEST')
+  @Roles('EMPLOYEE')
   @UseGuards(RoleGuard)
   removeItemsFromOrder(
     @Param('id') id: string,
@@ -119,7 +119,7 @@ export class OrderController {
       acc[date].totalOrders++;
       if (order.status === OrderStatus.CANCELLED) {
         acc[date].cancelledOrders++;
-      } else if (order.status === OrderStatus.COMPLETED) {
+      } else if (order.status === OrderStatus.PAID) {
         acc[date].completedOrders++;
         acc[date].revenue += order.totalBill;
       }

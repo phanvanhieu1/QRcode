@@ -11,9 +11,9 @@ import {
   UploadedFiles,
   Req,
 } from '@nestjs/common';
-import { ComboService } from './combo.service';
-import { CreateComboDto } from './dto/create-combo.dto';
-import { UpdateComboDto } from './dto/update-combo.dto';
+import { comboService } from './combo.service';
+import { CreatecomboDto } from './dto/create-combo.dto';
+import { UpdatecomboDto } from './dto/update-combo.dto';
 import { Roles } from '@/auth/authorization/roles.decorator';
 import { RoleGuard } from '@/auth/authorization/auth.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -21,22 +21,22 @@ import { multerS3Config } from '@/config/multer.config';
 import { MongoIdPipe } from '@/helper/mongo-id.pipe.ts';
 
 @Controller('combo')
-export class ComboController {
-  constructor(private readonly comboService: ComboService) {}
+export class comboController {
+  constructor(private readonly comboService: comboService) {}
 
   @Post('create')
   @Roles('ADMIN')
   @UseGuards(RoleGuard)
   @UseInterceptors(FilesInterceptor('images', 10, multerS3Config))
   async create(
-    @Body() createComboDto: CreateComboDto,
+    @Body() createcomboDto: CreatecomboDto,
     @UploadedFiles() files: Express.MulterS3.File[],
     @Req() req,
   ) {
     if (files && files.length > 0) {
-      createComboDto.images = files.map((file) => (file as any).location);
+      createcomboDto.images = files.map((file) => (file as any).location);
     }
-    return this.comboService.createCombo(createComboDto);
+    return this.comboService.createcombo(createcomboDto);
   }
 
   @Get()
@@ -57,14 +57,14 @@ export class ComboController {
   @UseInterceptors(FilesInterceptor('images', 10, multerS3Config))
   async update(
     @Param('id') id: string,
-    @Body() updateComboDto: UpdateComboDto,
+    @Body() updatecomboDto: UpdatecomboDto,
     @Req() req,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
     if (files && files.length > 0) {
-      updateComboDto.images = files.map((file) => (file as any).location);
+      updatecomboDto.images = files.map((file) => (file as any).location);
     }
-    return this.comboService.update(id, updateComboDto, req.user.role);
+    return this.comboService.update(id, updatecomboDto, req.user.role);
   }
 
   @Delete(':id')

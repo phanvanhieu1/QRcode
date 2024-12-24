@@ -3,25 +3,25 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateComboDto } from './dto/create-combo.dto';
-import { UpdateComboDto } from './dto/update-combo.dto';
-import { Combo, ComboDocument } from './schemas/combo.schemas';
+import { CreatecomboDto } from './dto/create-combo.dto';
+import { UpdatecomboDto } from './dto/update-combo.dto';
+import { combo, comboDocument } from './schemas/combo.schemas';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { product, productDocument } from '../product/schemas/product.schemas';
 
 @Injectable()
-export class ComboService {
+export class comboService {
   constructor(
-    @InjectModel(Combo.name) private comboModel: Model<ComboDocument>,
+    @InjectModel(combo.name) private comboModel: Model<comboDocument>,
     @InjectModel(product.name) private productModel: Model<productDocument>,
   ) {}
 
-  async createCombo(createComboDto: CreateComboDto): Promise<Combo> {
+  async createcombo(createcomboDto: CreatecomboDto): Promise<combo> {
     const { name, description, price, items, images, discount, isAvailable } =
-      createComboDto;
+      createcomboDto;
 
-    // Validate và chuyển đổi items thành ComboItem
+    // Validate và chuyển đổi items thành comboItem
     const validatedItems = await Promise.all(
       items.map(async (item) => {
         const { product, quantity } = item;
@@ -45,7 +45,7 @@ export class ComboService {
     );
 
     // Tạo combo mới
-    const newCombo = await this.comboModel.create({
+    const newcombo = await this.comboModel.create({
       name,
       description,
       price,
@@ -55,10 +55,10 @@ export class ComboService {
       isAvailable,
     });
 
-    return newCombo;
+    return newcombo;
   }
 
-  async findAll(user: any): Promise<Combo[]> {
+  async findAll(user: any): Promise<combo[]> {
     const role = user.role;
     if (role === undefined) {
       throw new NotFoundException('Not find to u');
@@ -82,21 +82,21 @@ export class ComboService {
 
   async update(
     id: string,
-    updateComboDto: UpdateComboDto,
+    updatecomboDto: UpdatecomboDto,
     role: string,
-  ): Promise<Combo> {
+  ): Promise<combo> {
     const combo = await this.comboModel.findById(id);
     if (!combo) {
-      throw new NotFoundException(`Combo with ID ${id} not found`);
+      throw new NotFoundException(`combo with ID ${id} not found`);
     }
 
     switch (role) {
       case 'ADMIN':
-        this.updateComboForAdmin(combo, updateComboDto);
+        this.updatecomboForAdmin(combo, updatecomboDto);
         break;
 
       case 'EMPLOYEE':
-        this.updateComboForEmployee(combo, updateComboDto);
+        this.updatecomboForEmployee(combo, updatecomboDto);
         break;
 
       default:
@@ -108,12 +108,12 @@ export class ComboService {
     return combo.save();
   }
 
-  private updateComboForAdmin(
-    combo: Combo,
-    updateComboDto: UpdateComboDto,
+  private updatecomboForAdmin(
+    combo: combo,
+    updatecomboDto: UpdatecomboDto,
   ): void {
     const { name, description, items, price, isAvailable, images } =
-      updateComboDto;
+      updatecomboDto;
 
     if (name) combo.name = name;
     if (description) combo.description = description;
@@ -128,13 +128,13 @@ export class ComboService {
     if (images) combo.images = images;
   }
 
-  private updateComboForEmployee(
-    combo: Combo,
-    updateComboDto: UpdateComboDto,
+  private updatecomboForEmployee(
+    combo: combo,
+    updatecomboDto: UpdatecomboDto,
   ): void {
-    const { isAvailable } = updateComboDto;
+    const { isAvailable } = updatecomboDto;
     const allowedFields = ['isAvailable'];
-    const invalidFields = Object.keys(updateComboDto).filter(
+    const invalidFields = Object.keys(updatecomboDto).filter(
       (field) => !allowedFields.includes(field),
     );
     if (invalidFields.length > 0) {

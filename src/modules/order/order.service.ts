@@ -7,14 +7,18 @@ import { CartDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { order } from './schemas/order.schemas';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { OrderStatus } from '@/decorator/enum';
 import { RemoveItemsDto } from './dto/remove-item.dto';
+import { product } from '../product/schemas/product.schemas';
+import { combo } from '../combo/schemas/combo.schemas';
 @Injectable()
 export class OrderService {
   constructor(
     @InjectModel(order.name)
     private orderModel: Model<order>,
+    // private productModel: Model<product>,
+    // private comboModel: Model<combo>,
   ) {}
 
   async create(cartDto: CartDto, tableNum: number, userId: any) {
@@ -23,13 +27,15 @@ export class OrderService {
       product: item.productId,
     }));
 
-    return await this.orderModel.create({
+    const rs = await this.orderModel.create({
       sessionId: userId,
       tableNumber: tableNum,
       nameGuest: cartDto.nameGuest,
       items: items,
+      type: cartDto.type,
       totalBill: cartDto.totalBill,
     });
+    return rs;
   }
 
   async findAll(role: any) {
@@ -84,16 +90,22 @@ export class OrderService {
   }
 
   async findMyOrder(sessionId: string) {
-    const rs = await this.orderModel
-      .find({
-        sessionId: sessionId,
-      })
+    const rs = await this.orderModel.find({ sessionId });
+    if (rs.length == 0) {
+      throw new NotFoundException(
+        'bạn không có đơn hàng hoặc đơn hàng không hợp lệ',
+      );
+    }
+    const a = rs[0].type;
+    const orders = await this.orderModel
+      .find({ sessionId })
       .populate({
         path: 'items.product',
-        model: 'product',
+        model: a,
       })
       .exec();
-    return rs;
+
+    return orders;
   }
 
   async requestPayment(id: string, sessionId: any, method: any): Promise<any> {
@@ -223,60 +235,60 @@ export class OrderService {
       updateData.inProcess = false;
     }
 
-    await this.orderModel.findByIdAndUpdate(
+    const rs = await this.orderModel.findByIdAndUpdate(
       id,
       { $set: updateData },
       { new: true },
     );
 
-    return `Update thành công`;
+    return rs;
   }
 
-  async addItemToOrder(id: string, addItemsDto: any): Promise<any> {
-    const order = await this.orderModel.findById(id);
+  // async addItemToOrder(id: string, addItemsDto: any): Promise<any> {
+  //   const order = await this.orderModel.findById(id);
 
-    if (!order) {
-      throw new NotFoundException(`Không tìm thấy đơn hàng với ID ${id}`);
-    }
+  //   if (!order) {
+  //     throw new NotFoundException(`Không tìm thấy đơn hàng với ID ${id}`);
+  //   }
 
-    switch (order.status) {
-      case OrderStatus.PLACED:
-      case OrderStatus.CONFIRMED:
-      case OrderStatus.COOKING:
-        break;
-      case OrderStatus.COMPLETED:
-        throw new BadRequestException(
-          'Không thể thêm món vào đơn hàng đã hoàn tất',
-        );
-      case OrderStatus.CANCELLED:
-        throw new BadRequestException(
-          'Không thể thêm món vào đơn hàng đã hủy.',
-        );
-      default:
-        throw new BadRequestException('Trạng thái đơn hàng không hợp lệ.');
-    }
-    ///aaa
+  //   switch (order.status) {
+  //     case OrderStatus.PLACED:
+  //     case OrderStatus.CONFIRMED:
+  //     case OrderStatus.COOKING:
+  //       break;
+  //     case OrderStatus.COMPLETED:
+  //       throw new BadRequestException(
+  //         'Không thể thêm món vào đơn hàng đã hoàn tất',
+  //       );
+  //     case OrderStatus.CANCELLED:
+  //       throw new BadRequestException(
+  //         'Không thể thêm món vào đơn hàng đã hủy.',
+  //       );
+  //     default:
+  //       throw new BadRequestException('Trạng thái đơn hàng không hợp lệ.');
+  //   }
+  //   ///aaa
 
-    for (const item of addItemsDto.items) {
-      const existingItem = order.items.find(
-        (existing) => existing.product.toString() === item.itemId,
-      );
+  //   for (const item of addItemsDto.items) {
+  //     const existingItem = order.items.find(
+  //       (existing) => existing.product.toString() === item.itemId,
+  //     );
 
-      if (existingItem) {
-        existingItem.quantity += item.quantity;
-        existingItem.price += item.price;
-      } else {
-        order.items.push({
-          product: item.itemId,
-          quantity: item.quantity,
-          price: item.price,
-        });
-      }
-    }
+  //     if (existingItem) {
+  //       existingItem.quantity += item.quantity;
+  //       existingItem.price += item.price;
+  //     } else {
+  //       order.items.push({
+  //         product: item.itemId,
+  //         quantity: item.quantity,
+  //         price: item.price,
+  //       });
+  //     }
+  //   }
 
-    await order.save();
-    return order;
-  }
+  //   await order.save();
+  //   return order;
+  // }
 
   async removeItemsFromOrder(
     id: string,
@@ -310,7 +322,8 @@ export class OrderService {
         (item) => item.product.toString() === itemId,
       );
       if (itemIndex !== -1) {
-        order.items.splice(itemIndex, 1);
+        order.items.splice(itemIndex, 1) &&
+          order.note.push(removeItemsDto.note);
       } else {
         throw new NotFoundException(
           `Không tìm thấy món với ID ${itemId} trong đơn hàng.`,
